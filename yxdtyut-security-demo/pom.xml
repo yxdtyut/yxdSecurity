@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>yxdtyut-security</artifactId>
+        <groupId>com.yxdtyut.security</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../yxdtyut-security/pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.yxdtyut.security</groupId>
+    <artifactId>yxdtyut-security-demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>yxdtyut-security-demo</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.yxdtyut.security</groupId>
+            <artifactId>yxdtyut-security-browser</artifactId>
+            <version>${yxdtyut.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+
+    <!--导入插件，springboot打出可执行jar-->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.3.3.RELEASE</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <finalName>demo</finalName>
+    </build>
+
+</project>
