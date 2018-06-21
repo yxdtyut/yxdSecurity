@@ -11,6 +11,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Date;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -69,6 +71,38 @@ public class UserControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
+    /** 创建用户测试.*/
+    @Test
+    public void createUserWhenSuccess() throws Exception {
+        long birthday = new Date().getTime();
+        String content = "{\"username\":\"王昭君\",\"password\":null,\"id\":null,\"birthday\":"+birthday+"}";
+        String result = mockMvc.perform(post("/user")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println("result:" + result);
+    }
 
+    /** 修改用户测试.*/
+    @Test
+    public void updateUserWhenSuccess() throws Exception {
+        long birthday = new Date().getTime();
+        String content = "{\"id\":\"1\",\"username\":\"李白\",\"password\":\"1\",\"birthday\":"+birthday+"}";
+        String result = mockMvc.perform(put("/user/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(content))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println("result:" + result);
+    }
 
+    /** 删除用户测试.*/
+    @Test
+    public void deleteUserWhenSuccess() throws Exception {
+        mockMvc.perform(delete("/user/1").contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
+    }
 }

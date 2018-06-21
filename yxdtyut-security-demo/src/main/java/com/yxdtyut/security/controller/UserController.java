@@ -5,8 +5,10 @@ import com.yxdtyut.security.entity.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +42,31 @@ public class UserController {
         user.setUsername("王昭君");
         user.setPassword(id);
         return user;
+    }
+
+    @PostMapping
+    @JsonView(User.DetailView.class)
+    public User createUser(@Valid @RequestBody User user, BindingResult errors) {
+        if (errors.hasErrors()) {
+            errors.getAllErrors().stream().forEach(x -> System.out.println(x.getDefaultMessage()));
+        }
+        user.setId("1");
+        System.out.println(user.toString());
+        return user;
+    }
+
+    @PutMapping("{id:\\d+}")
+    public User updateUser(@Valid @RequestBody User user, BindingResult errors) {
+        if (errors.hasErrors()) {
+            errors.getAllErrors().stream().forEach(x -> System.out.println(x.getDefaultMessage()));
+        }
+        System.out.println(user.toString());
+        return user;
+    }
+
+    @DeleteMapping("{id:\\d+}")
+    public void deleteUser() {
+        System.out.println("删除用户成功");
     }
 
 }
