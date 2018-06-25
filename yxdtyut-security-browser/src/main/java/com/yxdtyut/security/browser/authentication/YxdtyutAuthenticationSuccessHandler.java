@@ -6,7 +6,7 @@ import com.yxdtyut.security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 @Component(value = "yxdtyutAuthenticationSuccessHandler")
 @Slf4j
-public class YxdtyutAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
+public class YxdtyutAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler{
 
     @Autowired
     private ObjectMapper objectMapper;
