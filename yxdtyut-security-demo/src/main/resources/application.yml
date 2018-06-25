@@ -5,6 +5,11 @@ spring:
     password: root
   session:
     store-type: none
-security:
-  basic:
-    enabled: false
+yxdtyut:
+  security:
+    browser:
+      loginUrl: /demo-signIn.html
+      loginType: REDIRECT
+#security:
+#  basic:
+#    enabled: false
