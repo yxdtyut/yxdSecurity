@@ -12,4 +12,5 @@ import lombok.Data;
 public class BrowserProperties {
     private String loginUrl = "/yxdtyut-signIn.html";
     private LoginTypeEnum loginType = LoginTypeEnum.JSON;
+    private Integer rememberMeSeconds=3600*24;
 }

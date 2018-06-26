@@ -1,6 +1,7 @@
 package com.yxdtyut.security.browser.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yxdtyut.security.browser.domain.SimpleResponse;
 import com.yxdtyut.security.core.enums.LoginTypeEnum;
 import com.yxdtyut.security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class YxdtyutAuthenticationFailureHandler extends SimpleUrlAuthentication
         log.info("登陆失败");
         if (LoginTypeEnum.JSON.equals(securityProperties.getBrowser().getLoginType())) {
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(exception));
+            response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage())));
         } else {
             super.onAuthenticationFailure(request,response,exception);
         }

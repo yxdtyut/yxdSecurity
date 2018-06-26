@@ -6,6 +6,8 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +28,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    @GetMapping("/me")
+    public Object myUser(@AuthenticationPrincipal UserDetails user) {
+        return user;
+    }
+
     @GetMapping
     @JsonView(User.SimpleView.class)
     public List<User> findUserList(@RequestParam(required = false, defaultValue = "嘿嘿") String username

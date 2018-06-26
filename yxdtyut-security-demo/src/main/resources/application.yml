@@ -5,11 +5,16 @@ spring:
     password: root
   session:
     store-type: none
-yxdtyut:
-  security:
-    browser:
-      loginUrl: /demo-signIn.html
-      loginType: REDIRECT
+#yxdtyut:
+#  security:
+#    validate:
+#      image:
+#        width: 100
+#        length: 6
+#        urls: /user/*
+#    browser:
+#      loginUrl: /demo-signIn.html
+#      loginType: REDIRECT
 #security:
 #  basic:
 #    enabled: false
