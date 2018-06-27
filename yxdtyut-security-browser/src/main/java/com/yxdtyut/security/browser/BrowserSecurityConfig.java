@@ -1,7 +1,9 @@
 package com.yxdtyut.security.browser;
 
+import com.yxdtyut.security.core.authentication.mobile.SmsAuthenticationConfig;
 import com.yxdtyut.security.core.properties.SecurityProperties;
 import com.yxdtyut.security.core.validator.image.ImageCodeFilter;
+import com.yxdtyut.security.core.validator.sms.SmsCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,10 +41,16 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     private ImageCodeFilter imageCodeFilter;
 
     @Autowired
+    private SmsCodeFilter smsCodeFilter;
+
+    @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    private SmsAuthenticationConfig smsAuthenticationConfig;
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
@@ -59,13 +67,12 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-//        ImageCodeFilter imageCodeFilter = new ImageCodeFilter();
-//        imageCodeFilter.setYxdtyutAuthenticationFailureHandler(yxdtyutAuthenticationFailureHandler);
 
-        http.addFilterBefore(imageCodeFilter, UsernamePasswordAuthenticationFilter.class)
+        http    .addFilterBefore(smsCodeFilter,UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(imageCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
                     .loginPage("/authentication/require")
-                    .loginProcessingUrl("/authorization/login")
+                    .loginProcessingUrl("/authentication/login")
                     .successHandler(yxdtyutAuthenticationSuccessHandler)
                     .failureHandler(yxdtyutAuthenticationFailureHandler)
                     .and()
@@ -78,6 +85,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/authentication/require",securityProperties.getBrowser().getLoginUrl(),"/code/*").permitAll()
                 .anyRequest()
                 .authenticated()
-                .and().csrf().disable();
+                .and().csrf().disable()
+                .apply(smsAuthenticationConfig);
     }
 }

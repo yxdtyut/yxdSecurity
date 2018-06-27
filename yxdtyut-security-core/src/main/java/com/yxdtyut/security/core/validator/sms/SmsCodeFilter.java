@@ -1,4 +1,4 @@
-package com.yxdtyut.security.core.validator.image;
+package com.yxdtyut.security.core.validator.sms;
 
 import com.yxdtyut.security.core.properties.SecurityProperties;
 import com.yxdtyut.security.core.validator.ValidateCodeProcessor;
@@ -33,7 +33,7 @@ import java.util.Set;
  */
 @Data
 @Component
-public class ImageCodeFilter extends OncePerRequestFilter implements InitializingBean{
+public class SmsCodeFilter extends OncePerRequestFilter implements InitializingBean{
 
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
@@ -50,11 +50,11 @@ public class ImageCodeFilter extends OncePerRequestFilter implements Initializin
     @Override
     public void afterPropertiesSet() throws ServletException {
         super.afterPropertiesSet();
-        String[] urls = StringUtils.splitByWholeSeparatorPreserveAllTokens(securityProperties.getValidate().getImage().getUrls(), ",");
+        String[] urls = StringUtils.splitByWholeSeparatorPreserveAllTokens(securityProperties.getValidate().getSms().getUrls(), ",");
         if (urls != null && urls.length > 0) {
             Arrays.stream(urls).forEach((x)->urlSet.add(x));
         }
-        urlSet.add("/authentication/login");
+        urlSet.add("/authentication/mobile");
     }
 
     @Override
@@ -89,22 +89,22 @@ public class ImageCodeFilter extends OncePerRequestFilter implements Initializin
      */
     private void validateImageCode(HttpServletRequest request) throws ServletRequestBindingException {
         //从session中获取图形验证码，并判断
-        ImageCode imageCode = (ImageCode) sessionStrategy.getAttribute(new ServletWebRequest(request), ValidateCodeProcessor.SESSION_KEY_PREFIX + "IMAGE");
+        ValidateCode validateCode = (ValidateCode) sessionStrategy.getAttribute(new ServletWebRequest(request), ValidateCodeProcessor.SESSION_KEY_PREFIX + "SMS");
         //从请求中获取code值
-        String requestCode = ServletRequestUtils.getStringParameter(request, "imageCode");
+        String requestCode = ServletRequestUtils.getStringParameter(request, "smsCode");
         if (StringUtils.isBlank(requestCode)) {
             throw new ValidateException("验证码值为空");
         }
-        if (imageCode == null) {
+        if (validateCode == null) {
             throw new ValidateException("验证码不存在");
         }
-        if (imageCode.isExpire()) {
-            sessionStrategy.removeAttribute(new ServletWebRequest(request),ValidateCodeProcessor.SESSION_KEY_PREFIX + "IMAGE");
+        if (validateCode.isExpire()) {
+            sessionStrategy.removeAttribute(new ServletWebRequest(request),ValidateCodeProcessor.SESSION_KEY_PREFIX + "SMS");
             throw new ValidateException("验证码已经过期");
         }
-        if (!StringUtils.equals(imageCode.getCode(), requestCode)) {
+        if (!StringUtils.equals(validateCode.getCode(), requestCode)) {
             throw new ValidateException("验证码错误");
         }
-        sessionStrategy.removeAttribute(new ServletWebRequest(request),ValidateCodeProcessor.SESSION_KEY_PREFIX + "IMAGE");
+        sessionStrategy.removeAttribute(new ServletWebRequest(request),ValidateCodeProcessor.SESSION_KEY_PREFIX + "SMS");
     }
 }
