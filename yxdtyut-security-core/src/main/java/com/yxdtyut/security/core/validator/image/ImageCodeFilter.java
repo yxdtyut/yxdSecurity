@@ -1,7 +1,7 @@
 package com.yxdtyut.security.core.validator.image;
 
-import com.yxdtyut.security.core.controller.ImageCodeController;
 import com.yxdtyut.security.core.properties.SecurityProperties;
+import com.yxdtyut.security.core.validator.ValidateCodeProcessor;
 import com.yxdtyut.security.core.validator.ValidateException;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
@@ -89,7 +89,7 @@ public class ImageCodeFilter extends OncePerRequestFilter implements Initializin
      */
     private void validateImageCode(HttpServletRequest request) throws ServletRequestBindingException {
         //从session中获取图形验证码，并判断
-        ImageCode imageCode = (ImageCode) sessionStrategy.getAttribute(new ServletWebRequest(request), ImageCodeController.SESSION_IMAGE_CODE_KEY);
+        ImageCode imageCode = (ImageCode) sessionStrategy.getAttribute(new ServletWebRequest(request), ValidateCodeProcessor.SESSION_KEY_PREFIX + "IMAGE");
         //从请求中获取code值
         String requestCode = ServletRequestUtils.getStringParameter(request, "imageCode");
         if (StringUtils.isBlank(requestCode)) {
@@ -99,12 +99,12 @@ public class ImageCodeFilter extends OncePerRequestFilter implements Initializin
             throw new ValidateException("验证码不存在");
         }
         if (imageCode.isExpire()) {
-            sessionStrategy.removeAttribute(new ServletWebRequest(request),ImageCodeController.SESSION_IMAGE_CODE_KEY);
+            sessionStrategy.removeAttribute(new ServletWebRequest(request),ValidateCodeProcessor.SESSION_KEY_PREFIX + "IMAGE");
             throw new ValidateException("验证码已经过期");
         }
         if (!StringUtils.equals(imageCode.getCode(), requestCode)) {
             throw new ValidateException("验证码错误");
         }
-        sessionStrategy.removeAttribute(new ServletWebRequest(request),ImageCodeController.SESSION_IMAGE_CODE_KEY);
+        sessionStrategy.removeAttribute(new ServletWebRequest(request),ValidateCodeProcessor.SESSION_KEY_PREFIX + "IMAGE");
     }
 }

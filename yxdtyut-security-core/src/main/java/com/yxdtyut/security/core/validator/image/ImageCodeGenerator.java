@@ -21,7 +21,7 @@ public class ImageCodeGenerator implements ValidateCodeGenerator{
     private SecurityProperties securityProperties;
 
     @Override
-    public ImageCode imageCode(HttpServletRequest request) {
+    public ImageCode createCode(HttpServletRequest request) {
         int width = ServletRequestUtils.getIntParameter(request,"width", securityProperties.getValidate().getImage().getWidth());
         int height = ServletRequestUtils.getIntParameter(request,"height", securityProperties.getValidate().getImage().getHeight());
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);

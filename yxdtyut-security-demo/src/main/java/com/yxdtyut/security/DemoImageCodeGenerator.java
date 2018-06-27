@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 public class DemoImageCodeGenerator implements ValidateCodeGenerator{
 
     @Override
-    public ImageCode imageCode(HttpServletRequest request) {
+    public ImageCode createCode(HttpServletRequest request) {
         System.out.println("更高级的图形验证码生成逻辑");
         return null;
     }

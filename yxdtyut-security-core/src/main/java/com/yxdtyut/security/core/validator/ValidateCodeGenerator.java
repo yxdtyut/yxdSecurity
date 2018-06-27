@@ -1,6 +1,6 @@
 package com.yxdtyut.security.core.validator;
 
-import com.yxdtyut.security.core.validator.image.ImageCode;
+import com.yxdtyut.security.core.validator.sms.ValidateCode;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,5 +11,5 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 public interface ValidateCodeGenerator {
-    ImageCode imageCode(HttpServletRequest request);
+    ValidateCode createCode(HttpServletRequest request);
 }

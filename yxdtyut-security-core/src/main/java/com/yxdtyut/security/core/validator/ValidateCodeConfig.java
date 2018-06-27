@@ -2,6 +2,8 @@ package com.yxdtyut.security.core.validator;
 
 import com.yxdtyut.security.core.properties.SecurityProperties;
 import com.yxdtyut.security.core.validator.image.ImageCodeGenerator;
+import com.yxdtyut.security.core.validator.sms.SmsCodeSender;
+import com.yxdtyut.security.core.validator.sms.impl.DefaultSmsCodeSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -24,5 +26,11 @@ public class ValidateCodeConfig {
         ImageCodeGenerator imageCodeGenerator = new ImageCodeGenerator();
         imageCodeGenerator.setSecurityProperties(securityProperties);
         return imageCodeGenerator;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(SmsCodeSender.class)
+    public SmsCodeSender smsCodeSender() {
+        return new DefaultSmsCodeSender();
     }
 }
