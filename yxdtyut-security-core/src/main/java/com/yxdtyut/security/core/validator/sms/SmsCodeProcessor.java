@@ -3,6 +3,8 @@ package com.yxdtyut.security.core.validator.sms;
 import com.yxdtyut.security.core.properties.SecurityProperties;
 import com.yxdtyut.security.core.validator.AbstractValidateCodeProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.connect.web.HttpSessionSessionStrategy;
+import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -21,8 +23,12 @@ public class SmsCodeProcessor extends AbstractValidateCodeProcessor {
     @Autowired
     private SecurityProperties securityProperties;
 
+    /** session操作工具.*/
+    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+
     @Override
     protected void sendCode(ServletWebRequest request, ValidateCode validateCode) throws Exception {
         sender.send(ServletRequestUtils.getRequiredStringParameter(request.getRequest(),"mobile"),validateCode.getCode());
     }
+
 }

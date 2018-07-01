@@ -10,7 +10,7 @@ import lombok.Data;
  */
 @Data
 public class BrowserProperties {
-    private String loginUrl = "/yxdtyut-signIn.html";
+    private String loginUrl = SecurityConstants.DEFAULT_LOGIN_PAGE_URL;
     private LoginTypeEnum loginType = LoginTypeEnum.JSON;
     private Integer rememberMeSeconds=3600*24;
 }

@@ -1,20 +1,17 @@
 package com.yxdtyut.security.browser;
 
+import com.yxdtyut.security.core.authentication.AbstractChannelSecurityConfig;
 import com.yxdtyut.security.core.authentication.mobile.SmsAuthenticationConfig;
+import com.yxdtyut.security.core.properties.SecurityConstants;
 import com.yxdtyut.security.core.properties.SecurityProperties;
-import com.yxdtyut.security.core.validator.image.ImageCodeFilter;
-import com.yxdtyut.security.core.validator.sms.SmsCodeFilter;
+import com.yxdtyut.security.core.validator.ValidateCodeSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -26,22 +23,10 @@ import javax.sql.DataSource;
  * @Date : 下午4:45 2018/6/24
  */
 @Configuration
-public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
+public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 
     @Autowired
     private SecurityProperties securityProperties;
-
-    @Autowired
-    private AuthenticationSuccessHandler yxdtyutAuthenticationSuccessHandler;
-
-    @Autowired
-    private AuthenticationFailureHandler yxdtyutAuthenticationFailureHandler;
-
-    @Autowired
-    private ImageCodeFilter imageCodeFilter;
-
-    @Autowired
-    private SmsCodeFilter smsCodeFilter;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -51,6 +36,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private SmsAuthenticationConfig smsAuthenticationConfig;
+
+    @Autowired
+    private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
@@ -67,25 +55,24 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-
-        http    .addFilterBefore(smsCodeFilter,UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(imageCodeFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin()
-                    .loginPage("/authentication/require")
-                    .loginProcessingUrl("/authentication/login")
-                    .successHandler(yxdtyutAuthenticationSuccessHandler)
-                    .failureHandler(yxdtyutAuthenticationFailureHandler)
-                    .and()
+        applyPasswordAuthenticationConfig(http);
+        http.apply(validateCodeSecurityConfig)
+            .and()
+                .apply(smsAuthenticationConfig)
+            .and()
                 .rememberMe()
-                    .tokenRepository(persistentTokenRepository())
-                    .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
-                    .userDetailsService(userDetailsService)
-                .and()
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
+                .userDetailsService(userDetailsService)
+            .and()
                 .authorizeRequests()
-                .antMatchers("/authentication/require",securityProperties.getBrowser().getLoginUrl(),"/code/*").permitAll()
+                .antMatchers(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        securityProperties.getBrowser().getLoginUrl(),
+                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*").permitAll()
                 .anyRequest()
                 .authenticated()
-                .and().csrf().disable()
-                .apply(smsAuthenticationConfig);
+                .and().csrf().disable();
+
     }
 }

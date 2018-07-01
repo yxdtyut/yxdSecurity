@@ -1,5 +1,6 @@
 package com.yxdtyut.security.core.authentication.mobile;
 
+import com.yxdtyut.security.core.properties.SecurityConstants;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -21,7 +22,7 @@ public class SmsAuthenticationFilter  extends
     // ~ Static fields/initializers
     // =====================================================================================
 
-    public static final String SPRING_SECURITY_FORM_MOBILE_KEY = "mobile";
+    public static final String SPRING_SECURITY_FORM_MOBILE_KEY = SecurityConstants.DEFAULT_PARAMETER_NAME_MOBILE;
 
     private String mobileParameter = SPRING_SECURITY_FORM_MOBILE_KEY;
     private boolean postOnly = true;

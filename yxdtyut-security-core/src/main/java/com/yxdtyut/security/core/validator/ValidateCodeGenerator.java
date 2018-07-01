@@ -11,5 +11,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 public interface ValidateCodeGenerator {
+    /**
+     * @Author : yangxudong
+     * @Description : 生成验证码
+     * @param null
+     * @Date : 下午2:31 2018/7/1
+     */
     ValidateCode createCode(HttpServletRequest request);
+
+
 }

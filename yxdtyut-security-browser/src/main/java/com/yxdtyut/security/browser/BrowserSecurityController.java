@@ -1,6 +1,7 @@
 package com.yxdtyut.security.browser;
 
 import com.yxdtyut.security.browser.domain.SimpleResponse;
+import com.yxdtyut.security.core.properties.SecurityConstants;
 import com.yxdtyut.security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -36,7 +37,7 @@ public class BrowserSecurityController {
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-    @RequestMapping("/authentication/require")
+    @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public SimpleResponse authenticationRequire(HttpServletRequest request, HttpServletResponse response) throws IOException {
