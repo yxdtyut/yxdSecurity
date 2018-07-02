@@ -31,7 +31,7 @@ public class SmsAuthenticationFilter  extends
     // ===================================================================================================
 
     public SmsAuthenticationFilter() {
-        super(new AntPathRequestMatcher("/authentication/mobile", "POST"));
+        super(new AntPathRequestMatcher(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE, "POST"));
     }
 
     // ~ Methods

@@ -1,5 +1,6 @@
 package com.yxdtyut.security.core.validator;
 
+import com.yxdtyut.security.core.properties.SecurityConstants;
 import com.yxdtyut.security.core.properties.SecurityProperties;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -57,8 +58,8 @@ public class ValidateCodeFilter  extends OncePerRequestFilter implements Initial
         super.afterPropertiesSet();
         addUrlToMap(securityProperties.getValidate().getImage().getUrls(), ValidateCodeType.IMAGE);
         addUrlToMap(securityProperties.getValidate().getSms().getUrls(), ValidateCodeType.SMS);
-        urlMap.put("/authentication/login",ValidateCodeType.IMAGE);
-        urlMap.put("/authentication/mobile",ValidateCodeType.SMS);
+        urlMap.put(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM,ValidateCodeType.IMAGE);
+        urlMap.put(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,ValidateCodeType.SMS);
     }
 
     /**

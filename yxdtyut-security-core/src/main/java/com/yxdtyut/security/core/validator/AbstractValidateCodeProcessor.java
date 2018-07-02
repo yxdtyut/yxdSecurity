@@ -1,5 +1,6 @@
 package com.yxdtyut.security.core.validator;
 
+import com.yxdtyut.security.core.properties.SecurityConstants;
 import com.yxdtyut.security.core.validator.sms.ValidateCode;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +55,10 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
 
     /** 根据url获取验证码类型.*/
     protected  String getProcessorType(ServletWebRequest request){
-        return StringUtils.substringAfter(request.getRequest().getRequestURI(), "/code/");
+        return StringUtils.substringAfter(request.getRequest().getRequestURI(), SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/");
     };
 
-    /** 获取.*/
+    /** 获取验证码类型.*/
     public ValidateCodeType getValidateCodeType(HttpServletRequest request) {
         String type = StringUtils.substringBefore(getClass().getSimpleName(), "CodeProcessor");
         return ValidateCodeType.valueOf(type.toUpperCase());
