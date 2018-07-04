@@ -55,7 +55,7 @@ public class SocialConfig extends SocialConfigurerAdapter {
      */
     @Bean
     public SpringSocialConfigurer yxdSpringSocialConfigurer() {
-        SpringSocialConfigurer springSocialConfigurer = new yxdtyutSpringSocialConfigurer(securityProperties.getSocial().getFilterProcessesUrl());
+        SpringSocialConfigurer springSocialConfigurer = new YxdtyutSpringSocialConfigurer(securityProperties.getSocial().getFilterProcessesUrl());
         springSocialConfigurer.signupUrl(securityProperties.getBrowser().getSignUpUrl());
         return springSocialConfigurer;
     }

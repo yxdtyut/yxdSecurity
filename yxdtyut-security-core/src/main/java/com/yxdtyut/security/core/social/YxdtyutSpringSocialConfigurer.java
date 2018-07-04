@@ -10,11 +10,11 @@ import org.springframework.social.security.SpringSocialConfigurer;
  * @Date : 下午5:59 2018/7/2
  */
 
-public class yxdtyutSpringSocialConfigurer extends SpringSocialConfigurer {
+public class YxdtyutSpringSocialConfigurer extends SpringSocialConfigurer {
 
     private String filterProcessesUrl;
 
-    public yxdtyutSpringSocialConfigurer(String filterProcessesUrl) {
+    public YxdtyutSpringSocialConfigurer(String filterProcessesUrl) {
         this.filterProcessesUrl = filterProcessesUrl;
     }
 

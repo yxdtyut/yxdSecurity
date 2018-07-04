@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>标准绑定页面</title>
+    <script src="/webjars/jquery/3.3.1-1/jquery.js"></script>
+    <script>
+        $(function () {
+            $.ajax({
+                url:"/user/me",
+                type:"get",
+                success: function (result) {
+                    $("#hello").text(result.username);
+                }
+            })
+
+            $.ajax({
+                url:"/connect",
+                type:"get",
+                success: function (result) {
+                    var provider = eval(result);
+                    for(var key in provider) {
+                        $("#binding").append("<span>"+key+"</span>:");
+                        if (provider[key] == true) {
+                            $("#binding").append("已绑定");
+                        } else {
+                            $("#binding").append("未绑定");
+                        }
+                    }
+                }
+            })
+
+            $("#jiebang").click(function () {
+                $.ajax({
+                    url:"/connect/weixin",
+                    type:"delete",
+                    success: function (result) {
+                        //alert("解绑成功");
+                        window.reload();
+                    }
+                })
+            });
+        })
+    </script>
+</head>
+<body>
+    <h2>绑定页面</h2>
+    <h3>欢迎:<span id="hello"></span></h3>
+    <div id="binding">
+
+    </div>
+
+    <form action="/connect/weixin" method="post">
+        <button type="submit">微信绑定</button>
+    </form>
+
+    <form>
+        <button id="jiebang">微信解绑</button>
+    </form>
+</body>
+</html>
