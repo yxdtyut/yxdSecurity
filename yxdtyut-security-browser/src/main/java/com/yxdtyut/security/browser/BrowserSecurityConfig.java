@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
 
@@ -40,6 +41,9 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
     @Autowired
     private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 
+    @Autowired
+    private SpringSocialConfigurer yxdSpringSocialConfigurer;
+
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
@@ -60,6 +64,8 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
             .and()
                 .apply(smsAuthenticationConfig)
             .and()
+                .apply(yxdSpringSocialConfigurer)
+            .and()
                 .rememberMe()
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
@@ -68,7 +74,9 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
                 .authorizeRequests()
                 .antMatchers(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
                         securityProperties.getBrowser().getLoginUrl(),
-                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*").permitAll()
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*",
+                        securityProperties.getBrowser().getSignUpUrl(),
+                        "/social/user","/user/regist").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().csrf().disable();

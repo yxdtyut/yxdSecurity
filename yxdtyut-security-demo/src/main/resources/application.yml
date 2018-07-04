@@ -5,14 +5,24 @@ spring:
     password: root
   session:
     store-type: none
-#yxdtyut:
-#  security:
+yxdtyut:
+  security:
+    social:
+      filterProcessesUrl: /qqLogin
+      weixin:
+        appId: wxd99431bbff8305a0
+        appSecret: 60f78681d063590a469f1b297feff3c4
+      qq:
+        appId: 100550231
+        appSecret: 69b6ab57b22f3c2fe6a6149274e3295e
+        providerId: callback.do
 #    validate:
 #      image:
 #        width: 100
 #        length: 6
 #        urls: /user/*
-#    browser:
+    browser:
+      signUpUrl: /demo-signUp.html
 #      loginUrl: /demo-signIn.html
 #      loginType: REDIRECT
 #security:

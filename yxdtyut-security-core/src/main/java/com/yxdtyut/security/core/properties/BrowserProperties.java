@@ -13,4 +13,5 @@ public class BrowserProperties {
     private String loginUrl = SecurityConstants.DEFAULT_LOGIN_PAGE_URL;
     private LoginTypeEnum loginType = LoginTypeEnum.JSON;
     private Integer rememberMeSeconds=3600*24;
+    private String signUpUrl = "/yxdtyut-signUp.html";
 }

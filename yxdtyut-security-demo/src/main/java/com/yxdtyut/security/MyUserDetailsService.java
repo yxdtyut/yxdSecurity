@@ -1,13 +1,15 @@
-package com.yxdtyut.security.browser;
+package com.yxdtyut.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.social.security.SocialUser;
+import org.springframework.social.security.SocialUserDetails;
+import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class MyUserDetailsService implements UserDetailsService {
+public class MyUserDetailsService implements UserDetailsService, SocialUserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -28,8 +30,20 @@ public class MyUserDetailsService implements UserDetailsService {
         log.info("这里可以从数据库读取密码，读取失败可以抛出异常!");
         //模拟从数据库读取，读取出来的是加密后的密码，返回回去的时候，spring security默认调用
         //了passwordEncoder的matches方法进行比对
+        return builderUser(username);
+    }
+
+
+    @Override
+    public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException {
+        log.info("社交登陆用户登陆的用户名是:{}", userId);
+        log.info("这里通过userid获取用户其他信息");
+        return builderUser(userId);
+    }
+
+    private SocialUserDetails builderUser(String userId) {
         String password = passwordEncoder.encode("123456");
         log.info("加密后的密码:{}", password);
-        return new User(username,password, AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+        return new SocialUser(userId,password, AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
     }
 }

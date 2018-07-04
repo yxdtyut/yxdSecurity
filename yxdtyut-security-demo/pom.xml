@@ -38,6 +38,12 @@
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>3.3.1-1</version>
+        </dependency>
     </dependencies>
 
 

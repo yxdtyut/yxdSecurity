@@ -1,6 +1,7 @@
 package com.yxdtyut.security.browser;
 
 import com.yxdtyut.security.browser.domain.SimpleResponse;
+import com.yxdtyut.security.browser.domain.SocialUserInfo;
 import com.yxdtyut.security.core.properties.SecurityConstants;
 import com.yxdtyut.security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +13,10 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.web.ProviderSignInUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +34,9 @@ public class BrowserSecurityController {
     @Autowired
     private SecurityProperties securityProperties;
 
+    @Autowired
+    private ProviderSignInUtils providerSignInUtils;
+
     private RequestCache requestCache = new HttpSessionRequestCache();
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
@@ -44,13 +48,24 @@ public class BrowserSecurityController {
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest != null) {
             String redirectUrl = savedRequest.getRedirectUrl();
-            log.info("引发跳转的url是:{}",redirectUrl);
+            log.info("引发跳转的url是:{}", redirectUrl);
             if (StringUtils.endsWithIgnoreCase(redirectUrl, ".html")) {
-                redirectStrategy.sendRedirect(request,response,securityProperties.getBrowser().getLoginUrl());
+                redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getLoginUrl());
             } else {
                 return new SimpleResponse("需要进行身份认证，请先登陆");
             }
         }
         return null;
+    }
+
+    @GetMapping("/social/user")
+    public SocialUserInfo getSocialUserInfo(HttpServletRequest request) {
+        SocialUserInfo socialUserInfo = new SocialUserInfo();
+        Connection<?> conn = providerSignInUtils.getConnectionFromSession(new ServletWebRequest(request));
+        socialUserInfo.setProviderId(conn.getKey().getProviderId());
+        socialUserInfo.setProviderUserId(conn.getKey().getProviderUserId());
+        socialUserInfo.setNickName(conn.getDisplayName());
+        socialUserInfo.setHeadimg(conn.getImageUrl());
+        return socialUserInfo;
     }
 }
