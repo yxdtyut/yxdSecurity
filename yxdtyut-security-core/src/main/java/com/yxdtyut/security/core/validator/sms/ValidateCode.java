@@ -2,6 +2,7 @@ package com.yxdtyut.security.core.validator.sms;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
  * @Date : 上午9:58 2018/6/26
  */
 @Data
-public class ValidateCode {
+public class ValidateCode implements Serializable{
     private String code;
     private LocalDateTime expire;
 

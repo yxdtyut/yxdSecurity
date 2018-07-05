@@ -68,4 +68,10 @@ public class BrowserSecurityController {
         socialUserInfo.setHeadimg(conn.getImageUrl());
         return socialUserInfo;
     }
+
+    @GetMapping("/session/invalid")
+    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+    public SimpleResponse sessionInvalid() {
+        return new SimpleResponse("session失效");
+    }
 }

@@ -14,4 +14,6 @@ public class BrowserProperties {
     private LoginTypeEnum loginType = LoginTypeEnum.JSON;
     private Integer rememberMeSeconds=3600*24;
     private String signUpUrl = "/yxdtyut-signUp.html";
+    private SessionProperties session = new SessionProperties();
+    private String logoutUrl;
 }

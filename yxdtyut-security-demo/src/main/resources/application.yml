@@ -4,7 +4,11 @@ spring:
     username: root
     password: root
   session:
-    store-type: none
+    store-type: REDIS
+  redis:
+    host: 192.168.43.43
+    port: 6380
+    password: 123456
 yxdtyut:
   security:
     social:
@@ -23,6 +27,11 @@ yxdtyut:
 #        urls: /user/*
     browser:
       signUpUrl: /demo-signUp.html
+      logoutUrl: /demo-logout.html
+server:
+  session:
+    timeout: 3600
+  port: 8080
 #      loginUrl: /demo-signIn.html
 #      loginType: REDIRECT
 #security:

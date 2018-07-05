@@ -12,8 +12,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
@@ -44,6 +47,16 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
     @Autowired
     private SpringSocialConfigurer yxdSpringSocialConfigurer;
 
+
+    @Autowired
+    private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
+
+    @Autowired
+    private InvalidSessionStrategy invalidSessionStrategy;
+
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
+
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
@@ -71,12 +84,25 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
                 .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
                 .userDetailsService(userDetailsService)
             .and()
+                .sessionManagement()
+                .invalidSessionStrategy(invalidSessionStrategy)
+                .maximumSessions(securityProperties.getBrowser().getSession().getMaximumSessions())
+                .expiredSessionStrategy(sessionInformationExpiredStrategy)
+                .maxSessionsPreventsLogin(true)
+                .and()
+            .and()
+                .logout()
+                .logoutSuccessHandler(logoutSuccessHandler)
+                .deleteCookies("JSESSIONID")
+            .and()
                 .authorizeRequests()
                 .antMatchers(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
                         securityProperties.getBrowser().getLoginUrl(),
                         SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*",
                         securityProperties.getBrowser().getSignUpUrl(),
-                        "/social/user","/user/regist").permitAll()
+                        "/social/user","/user/regist",
+                        securityProperties.getBrowser().getSession().getInvalidSessionUrl(),
+                        securityProperties.getBrowser().getLoginUrl()).permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().csrf().disable();

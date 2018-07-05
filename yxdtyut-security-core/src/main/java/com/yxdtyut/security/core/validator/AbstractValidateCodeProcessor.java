@@ -43,7 +43,8 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
 
     /** 保存验证码到session.*/
     protected void saveCode(ServletWebRequest request, C validateCode){
-        sessionStrategy.setAttribute(request,SESSION_KEY_PREFIX + getProcessorType(request).toUpperCase(), validateCode);
+        ValidateCode code = new ValidateCode(validateCode.getCode(),validateCode.getExpire());
+        sessionStrategy.setAttribute(request,SESSION_KEY_PREFIX + getProcessorType(request).toUpperCase(), code);
     };
 
     /** 生成验证码.*/
